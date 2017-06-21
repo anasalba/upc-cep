@@ -43,6 +43,7 @@ public class LoggerSink extends AbstractSink implements Configurable {
                 byte[] body = event.getBody();
                 String data = new String(body);
 
+                System.out.println(data);
                 logger.debug(data);
                 System.out.println(data);
             } else {

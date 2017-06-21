@@ -3,18 +3,19 @@ package upc.edu.cep.RDF_Model.event;
 import upc.edu.cep.Interpreter.InterpreterContext;
 import upc.edu.cep.Interpreter.InterpreterException;
 
-import java.security.Timestamp;
 import java.util.HashMap;
 import java.util.Map;
+
+//import java.security.Timestamp;
 
 /**
  * Created by osboxes on 23/05/17.
  */
 public class TimeEvent extends CEPElement {
 
-    Timestamp timestamp;
+    String timestamp;
 
-    public TimeEvent(String IRI, Timestamp timestamp) {
+    public TimeEvent(String IRI, String timestamp) {
         super(IRI);
         this.timestamp = timestamp;
     }
@@ -22,21 +23,21 @@ public class TimeEvent extends CEPElement {
     public TimeEvent(String IRI) {
         super(IRI);
     }
-
-    public TimeEvent(Timestamp timestamp) {
-        super();
-        this.timestamp = timestamp;
-    }
+//
+//    public TimeEvent( String timestamp) {
+//        super();
+//        this.timestamp = timestamp;
+//    }
 
     public TimeEvent() {
         super();
     }
 
-    public Timestamp getTimestamp() {
+    public String getTimestamp() {
         return timestamp;
     }
 
-    public void setTimestamp(Timestamp timestamp) {
+    public void setTimestamp(String timestamp) {
         this.timestamp = timestamp;
     }
 

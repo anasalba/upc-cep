@@ -52,7 +52,7 @@ public class JSONProducerEvent1 {
                 e.printStackTrace();
             }
 
-            Thread.sleep(1000);
+            Thread.sleep(100);
 
         }
         //producer.close();
