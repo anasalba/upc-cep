@@ -76,7 +76,7 @@ public class FlumeSink {
         result = String.join("\n", result
                 , prefix + ManagerConstants.CEP_SINK_RULE_ID + " = " + rule.getIRI()
                 , prefix + ManagerConstants.CEP_SINK_EXPRESSION + " = " + rule.interpret(InterpreterContext.ESPER)
-                , prefix + ManagerConstants.TYPE + " = upc.edu.cep.flume.sinks.CEPSink"
+                , prefix + ManagerConstants.TYPE + " = upc.edu.cep.flume.sinks.CEPSinkOldVersion"
                 , prefix + ManagerConstants.CEP_SINK_RESTART + " = " + restart
                 , prefix + ManagerConstants.CEP_SINK_CHANNEL + " = " + flumeChannel.getChannelName()
         );
@@ -126,6 +126,6 @@ public class FlumeSink {
     }
 }
 
-//        remote_agent.sinks.CEPSink.Event1.attributes = mylog yourlog
-//        remote_agent.sinks.CEPSink.Event1.mylog.type=string
-//        remote_agent.sinks.CEPSink.Event1.yourlog.type=string
+//        remote_agent.sinks.CEPSinkOldVersion.Event1.attributes = mylog yourlog
+//        remote_agent.sinks.CEPSinkOldVersion.Event1.mylog.type=string
+//        remote_agent.sinks.CEPSinkOldVersion.Event1.yourlog.type=string

@@ -6,6 +6,7 @@ package upc.edu.cep.kafka.producers;
 public class Event1 {
     private String mylog;
     private String yourlog;
+    private int fifi;
 
     public Event1(String mylog, String yourlog) {
         this.mylog = mylog;
@@ -29,5 +30,13 @@ public class Event1 {
 
     public void setYourlog(String yourlog) {
         this.yourlog = yourlog;
+    }
+
+    public int getFifi() {
+        return fifi;
+    }
+
+    public void setFifi(int fifi) {
+        this.fifi = fifi;
     }
 }

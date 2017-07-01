@@ -48,6 +48,10 @@ public class CEPFilterSelector extends AbstractChannelSelector {
         Set<Map.Entry> attSet = attributes.entrySet();
         for (Map.Entry entry : attSet) {
             switch ((String) entry.getValue()) {
+                case CEPSelectorConstants.TYPE_INT: {
+                    fields.add(new Schema.Field((String) entry.getKey(), Schema.create(Schema.Type.INT), null, null));
+                    break;
+                }
                 case CEPSelectorConstants.TYPE_BOOLEAN: {
                     fields.add(new Schema.Field((String) entry.getKey(), Schema.create(Schema.Type.BOOLEAN), null, null));
                     break;

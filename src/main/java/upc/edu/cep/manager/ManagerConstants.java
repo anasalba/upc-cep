@@ -67,7 +67,7 @@ public class ManagerConstants {
 
     static final String CEP_SINK_EVENT_NAMES = "event.names";
     static final String CEP_SINK_TYPE = TYPE;
-    static final String CEP_SINK_TYPE_INSTANCE = "upc.edu.cep.flume.sinks.CEPSink";
+    static final String CEP_SINK_TYPE_INSTANCE = "upc.edu.cep.flume.sinks.CEPSinkOldVersion";
     static final String CEP_SINK_DELETED_RULES = "deletedRules";
     static final String CEP_SINK_EXPRESSION = "expression";
     static final String CEP_SINK_ACTIONS = "event.actions";

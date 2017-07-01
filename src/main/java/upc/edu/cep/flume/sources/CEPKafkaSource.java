@@ -127,6 +127,10 @@ public class CEPKafkaSource extends AbstractPollableSource
         Set<Map.Entry> attSet = attributes.entrySet();
         for (Map.Entry entry : attSet) {
             switch ((String) entry.getValue()) {
+                case CustomTypeKafkaSourceConstants.TYPE_INT: {
+                    fields.add(new Schema.Field((String) entry.getKey(), Schema.create(Schema.Type.INT), null, null));
+                    break;
+                }
                 case CustomTypeKafkaSourceConstants.TYPE_BOOLEAN: {
                     fields.add(new Schema.Field((String) entry.getKey(), Schema.create(Schema.Type.BOOLEAN), null, null));
                     break;

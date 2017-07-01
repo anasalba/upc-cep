@@ -1,9 +1,9 @@
-package upc.edu.cep.flume.selectors;
+package upc.edu.cep.flume.interceptors;
 
 /**
  * Created by osboxes on 02/05/17.
  */
-class CEPSelectorConstants {
+class DistributedInterceptorConstants {
 
     static final String EVENT_TYPE = "event.type";
     static final String EVENT_NAME = "event.name";

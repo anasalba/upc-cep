@@ -26,7 +26,7 @@ public class CEPSink1 extends AbstractSink implements Configurable {
 
         // Configuration
         Configuration config = new Configuration();
-        config.addEventTypeAutoName("com.edu.cep.CEPElements");
+        config.addEventTypeAutoName("com.edu.cep.events");
          epService = EPServiceProviderManager.getDefaultProvider(config);
 
 

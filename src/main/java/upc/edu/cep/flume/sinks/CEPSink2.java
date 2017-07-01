@@ -120,7 +120,7 @@ public class CEPSink2 extends AbstractSink implements Configurable {
                     return;
                 }
                 EventBean event = newEvents[0];
-                System.out.println("Count: "+ event.get("count(log)") + "**************");
+                System.out.println("Count: " + getChannel().getName() + "   " + event.get("count(log)") + "**************");
                 try {
                     Files.write(Paths.get("/home/osboxes/upc-cep/cep2.txt"), ("Count: "+ event.get("count(log)") + "**************").getBytes(), StandardOpenOption.APPEND);
                 }catch (IOException e) {

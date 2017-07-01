@@ -13,36 +13,24 @@ import org.apache.flume.event.EventHelper;
 import org.apache.flume.sink.AbstractSink;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import upc.edu.cep.events.LogEvent;
 
 import java.util.*;
 
 /**
 
  */
-public class CEPSink extends AbstractSink implements Configurable {
+public class CEPSinkOldVersion extends AbstractSink implements Configurable {
 
-    private static final Logger logger = LoggerFactory.getLogger(CEPSink.class);
-
+    private static final Logger logger = LoggerFactory.getLogger(CEPSinkOldVersion.class);
+    String rulesStatment;
     private EPServiceProvider epService;
-
     private String expression;
-
     private Map<String, SinkEvent> events;
-
     private EPStatement statement;
-
     private boolean restart;
-
     private String ruleID;
-
     private String monitor = "";
-
     private String[] action;
-
-    private String rulesStatment;
-
-    private Map<String, ConfigurationEventTypeAvro> avroMap;
 
     public static Schema makeSchema(Map attributes, String eventName) {
 
@@ -91,27 +79,12 @@ public class CEPSink extends AbstractSink implements Configurable {
     public synchronized void start() {
         super.start();
 
+//        Configuration config = new Configuration();
+//        config.addEventType("com.edu.cep.CEPElements.LogEvent",LogEvent.class.getName());
+//        epService = EPServiceProviderManager.getDefaultProvider(config);
 
-        Configuration config = new Configuration();
-        epService = EPServiceProviderManager.getDefaultProvider(config);
-
-        for (String eventName : avroMap.keySet()) {
-            if (!eventName.equals("")) {
-
-                if (restart || !epService.getEPAdministrator().getConfiguration().isEventTypeExists(eventName)) {
-
-                    epService.getEPAdministrator().getConfiguration().addEventTypeAvro(eventName, avroMap.get(eventName));
-                }
-            }
-        }
-
-        if (rulesStatment != null) {
-            String[] rules = rulesStatment.trim().split(" ");
-            if (rules.length > 0) {
-                deleteRules(rules);
-            }
-        }
-
+        //Creating a Statement
+        //String expression = "select count(a) from pattern [every a=Event1 where timer:within(2 sec)].win:time(2 hour)"; //time_batch
 
         if (restart) {
             if (epService.getEPAdministrator().getStatement(ruleID) == null) {
@@ -142,43 +115,59 @@ public class CEPSink extends AbstractSink implements Configurable {
                 this.stop();
             }
         }
+
+//or test
+        //EPStatement statement = epService.getEPAdministrator().createPattern("every (spike= Event1 or error= Event2)");
+//        String expression = "select * from pattern [every (spike= Event1 or error= Event2)]"; //time_batch
+//        EPStatement statement = epService.getEPAdministrator().createEPL(expression);
+
+//and test
+        //String expression = "select * from pattern [every (spike= Event1 and error= Event2 where timer:within(10 sec))]"; //time_batch
+        //EPStatement statement = epService.getEPAdministrator().createEPL(expression);
+
+        // Adding a Listener
+
+
     }
 
     @Override
     public void configure(Context context) {
         // Configuration
 
-        avroMap = new HashMap<>();
-
+        Configuration config = new Configuration();
         //config.addEventType("com.edu.cep.CEPElements.LogEvent",LogEvent.class.getName());
         rulesStatment = context.getString(CEPSinkConstants.DELETED_RULES);
         expression = context.getString(CEPSinkConstants.EXPRESSION);
 
-
+        epService = EPServiceProviderManager.getDefaultProvider(config);
         events = new HashMap<>();
         String[] eventNames = context.getString(CEPSinkConstants.EVENT_NAME).trim().split(" ");
         action = context.getString(CEPSinkConstants.ACTIONS).trim().split(" ");
         for (String eventName : eventNames) {
-            if (!eventName.equals("")) {
-                String eventAttributes = context.getString(eventName + "." + CEPSinkConstants.EVENT_ATTRIBUTES);
-                SinkEvent sinkEvent = new SinkEvent();
-                if (eventAttributes != null && !eventAttributes.isEmpty()) {
-                    String[] atts = eventAttributes.trim().split(" ");
-                    Map attributes = new HashMap<>();
-                    for (String attribute : atts) {
-                        attributes.put(attribute, context.getString(eventName + "." + attribute + "." + CEPSinkConstants.ATTRIBUTE_TYPE));
-                        System.out.println("att: **" + attribute + "*******************");
-                        System.out.println("type: **" + attributes.get(attribute) + "*******************");
-                        System.out.println("eventName: **" + eventName + "*******************");
-                    }
-                    restart = context.getBoolean(CEPSinkConstants.RESTART, false);
-                    ruleID = context.getString(CEPSinkConstants.RULE_ID);
-                    events.put(eventName, new SinkEvent(attributes, attributes.keySet(), makeSchema(attributes, eventName)));
-
-                    ConfigurationEventTypeAvro avroEvent = new ConfigurationEventTypeAvro(events.get(eventName).getSchema());
-                    avroMap.put(eventName, avroEvent);
-
+            String eventAttributes = context.getString(eventName + "." + CEPSinkConstants.EVENT_ATTRIBUTES);
+            SinkEvent sinkEvent = new SinkEvent();
+            if (eventAttributes != null && !eventAttributes.isEmpty()) {
+                String[] atts = eventAttributes.trim().split(" ");
+                Map attributes = new HashMap<>();
+                for (String attribute : atts) {
+                    attributes.put(attribute, context.getString(eventName + "." + attribute + "." + CEPSinkConstants.ATTRIBUTE_TYPE));
+                    System.out.println("att: **" + attribute + "*******************");
+                    System.out.println("type: **" + attributes.get(attribute) + "*******************");
+                    System.out.println("eventName: **" + eventName + "*******************");
                 }
+                restart = context.getBoolean(CEPSinkConstants.RESTART, false);
+                ruleID = context.getString(CEPSinkConstants.RULE_ID);
+                events.put(eventName, new SinkEvent(attributes, attributes.keySet(), makeSchema(attributes, eventName)));
+                if (restart || !epService.getEPAdministrator().getConfiguration().isEventTypeExists(eventName)) {
+                    ConfigurationEventTypeAvro avroEvent = new ConfigurationEventTypeAvro(events.get(eventName).getSchema());
+                    epService.getEPAdministrator().getConfiguration().addEventTypeAvro(eventName, avroEvent);
+                }
+            }
+        }
+        if (rulesStatment != null) {
+            String[] rules = rulesStatment.trim().split(" ");
+            if (rules.length > 0) {
+                deleteRules(rules);
             }
         }
     }
@@ -212,14 +201,14 @@ public class CEPSink extends AbstractSink implements Configurable {
         Channel channel = getChannel();
         Transaction tx = null;
         try {
-            System.out.println("begin");
+            System.out.println("begin " + channel.getName());
             tx = channel.getTransaction();
             tx.begin();
 
             Event event = channel.take();
 
             if (event != null) {
-                System.out.println("then");
+                System.out.println("rules are: " + event.getHeaders().get("Rules") + "in the channel: " + getChannel().getName());
                 Map<String, String> headers = event.getHeaders();
 
                 String line = EventHelper.dumpEvent(event);
@@ -237,14 +226,14 @@ public class CEPSink extends AbstractSink implements Configurable {
                 /*System.out.println(headers.get("hostname"));
                 System.out.println(Long.parseLong(headers.get("timestamp")));*/
                 // Sending CEPElements
-                LogEvent cepEvent = new LogEvent();
-                cepEvent.setLog("w");
-                if (headers != null) {
-                    cepEvent.setHostname(headers.get("hostname"));
-                    cepEvent.setTimestamp(Long.parseLong(headers.get("timestamp")));
-                }
-
-                epService.getEPRuntime().sendEvent(cepEvent);
+//                LogEvent cepEvent = new LogEvent();
+//                cepEvent.setLog("w");
+//                if (headers != null) {
+//                    cepEvent.setHostname(headers.get("hostname"));
+//                    cepEvent.setTimestamp(Long.parseLong(headers.get("timestamp")));
+//                }
+//
+//                epService.getEPRuntime().sendEvent(cepEvent);
 
             } else {
                 status = Status.BACKOFF;
