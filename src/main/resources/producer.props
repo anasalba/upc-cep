@@ -1,4 +1,5 @@
-bootstrap.servers=localhost:9092
+bootstrap.servers=server1:9092,server2:9092,server3:9092
+#group.id=test
 acks=all
 retries=0
 batch.size=16384
