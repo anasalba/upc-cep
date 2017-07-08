@@ -8,13 +8,14 @@ import java.util.Properties;
 import kafka.admin.AdminUtils;
 import kafka.utils.ZKStringSerializer$;
 import kafka.utils.ZkUtils;
+import org.apache.zookeeper.CreateMode;
 
 /**
  * Created by osboxes on 14/04/17.
  */
 public class TopicCreator {
     public static void main(String[] args) {
-        String zookeeperConnect = "localhost:2181";
+        String zookeeperConnect = "server1:2181,server2:2181,server3:2181";
         int sessionTimeoutMs = 10 * 1000;
         int connectionTimeoutMs = 8 * 1000;
         // Note: You must initialize the ZkClient with ZKStringSerializer.  If you don't, then
@@ -31,12 +32,15 @@ public class TopicCreator {
         boolean isSecureKafkaCluster = false;
         ZkUtils zkUtils = new ZkUtils(zkClient, new ZkConnection(zookeeperConnect), isSecureKafkaCluster);
 
-        String topic = "logtest";
-        int partitions = 2;
-        int replication = 1;
-        Properties topicConfig = new Properties(); // add per-topic configurations settings here
-        AdminUtils.deleteTopic(zkUtils,topic);
-        AdminUtils.createTopic(zkUtils, topic, partitions, replication, topicConfig);
+        String aaa = "hi";
+        zkUtils.zkClient().writeData("/ggg", "sss");
+
+//        String topic = "logtest";
+//        int partitions = 2;
+//        int replication = 1;
+//        Properties topicConfig = new Properties(); // add per-topic configurations settings here
+//        AdminUtils.deleteTopic(zkUtils,topic);
+//        AdminUtils.createTopic(zkUtils, topic, partitions, replication, topicConfig);
 
         zkClient.close();
     }

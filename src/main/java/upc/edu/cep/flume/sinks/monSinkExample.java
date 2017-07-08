@@ -4,7 +4,7 @@ import com.mongodb.*;
 
 import java.net.UnknownHostException;
 
-public class mongoExample {
+public class monSinkExample {
 
     public static void main(String[] args) throws Exception {
         try {
@@ -15,25 +15,22 @@ public class mongoExample {
 
             /**** Get database ****/
             // if database doesn't exists, MongoDB will create it for you
-            DB db = mongo.getDB("testdb");
+            DB db = mongo.getDB("statistics");
 
-            BasicDBObject regexQuery = new BasicDBObject();
-            regexQuery.put("_id",
-                    new BasicDBObject("$regex", "shadi.*")
-                            .append("$options", "i"));
 
             /**** Get collection / table from 'testdb' ****/
             // if collection doesn't exists, MongoDB will create it for you
-            DBCollection table = db.getCollection("user");
+            DBCollection table = db.getCollection("cep");
 
-            DBCursor curr = table.find(regexQuery).sort(new BasicDBObject("_id", -1))
-                    .limit(1);
+            BasicDBObject searchQuery = new BasicDBObject();
 
-            if (curr.hasNext()) {
-                DBObject dbObject = curr.next();
-                int age = Integer.parseInt(dbObject.get("age").toString());
-                System.out.println(age);
+            DBCursor cursor = table.find(searchQuery);
+
+            while (cursor.hasNext()) {
+                System.out.println(cursor.next());
             }
+
+
         } catch (UnknownHostException e) {
             e.printStackTrace();
         } catch (MongoException e) {

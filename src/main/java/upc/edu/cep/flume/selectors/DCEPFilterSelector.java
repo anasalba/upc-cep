@@ -40,14 +40,14 @@ public class DCEPFilterSelector extends AbstractChannelSelector {
             r = r.trim();
             if (!r.equals("")) {
                 channelsSet.add(channels.get(r));
-                System.out.println("+++++++++++++++++++++++++++++++++++  " + channels.get(r));
+                //System.out.println("+++++++++++++++++++++++++++++++++++  " + channels.get(r));
             }
         }
-        System.out.println("---------------------------------------------  " + event.getHeaders().get("Rules") + "++" + channelsSet.size());
+        //System.out.println("---------------------------------------------  " + event.getHeaders().get("Rules") + "++" + channelsSet.size());
 
         List<Channel> aaa = new ArrayList<>(channelsSet);
 
-        System.out.println("---------------------------------------------  " + event.getHeaders().get("Rules") + "++" + aaa.size());
+        //System.out.println("---------------------------------------------  " + event.getHeaders().get("Rules") + "++" + aaa.size());
 
 
         return aaa;

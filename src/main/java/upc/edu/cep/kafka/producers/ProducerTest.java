@@ -18,13 +18,16 @@ import org.codehaus.jackson.map.ObjectMapper;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.util.Properties;
 
 
 //  /home/osboxes/apache-flume-1.7.0-bin/bin/flume-ng agent -name remote_agent -c /home/osboxes/apache-flume-1.7.0-bin/conf -f /home/osboxes/apache-flume-1.7.0-bin/conf/5-4-2017-jsoneventtest.properties
 
 
-public class JSONProducerEvent1 {
+public class ProducerTest {
     //hi
     public static void main(String[] args) throws Exception {
         KafkaProducer<String, String> producer;
@@ -35,26 +38,46 @@ public class JSONProducerEvent1 {
         }
         ObjectMapper objectMapper = new ObjectMapper();
         String key = "key1";
-        int i = 0;
-        while (true) {
-
-            Event1 event1 = new Event1();
-            event1.setMylog("v1345");
-            event1.setYourlog("v2");
-            event1.setFifi(4);
-
-            ProducerRecord record = new ProducerRecord<String, byte[]>("logcep2", key, objectMapper.writeValueAsBytes(event1));
 
 
+
+        for (int iii = 0 ; iii<10;iii++) {
             try {
-                producer.send(record);
-            } catch (SerializationException e) {
-                // may need to do something with it
-                e.printStackTrace();
+                Files.write(Paths.get("/home/osboxes/upc-cep/cep2.txt"), ("\n"+"Start Sending: " + System.currentTimeMillis()+"  , ").getBytes(), StandardOpenOption.APPEND);
+            } catch (IOException e) {
             }
+            long i = 0;
+            long limit = 1000000;
+            long limitless = limit - 1000;
+            while (limit > i++) {
 
-            Thread.sleep(100);
 
+                Event1 event1 = new Event1();
+                event1.setMylog("v1345");
+                event1.setYourlog("v2");
+                event1.setFifi(4);
+                if (i == limitless) {
+                    event1.setMylog("final");
+                    event1.setFifi(4);
+                }
+
+
+                ProducerRecord record = new ProducerRecord<String, byte[]>("logcep2", key, objectMapper.writeValueAsBytes(event1));
+
+
+                try {
+                    producer.send(record);
+                } catch (SerializationException e) {
+                    // may need to do something with it
+                    e.printStackTrace();
+                }
+                //Thread.sleep(100);
+
+            }
+            try {
+                Files.write(Paths.get("/home/osboxes/upc-cep/cep2.txt"), ("End Sending: " + System.currentTimeMillis() + "  , ").getBytes(), StandardOpenOption.APPEND);
+            } catch (IOException e) {
+            }
         }
         //producer.close();
     }

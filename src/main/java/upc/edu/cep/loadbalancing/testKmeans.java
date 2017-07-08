@@ -1,4 +1,4 @@
-package upc.edu.cep.manager;
+package upc.edu.cep.loadbalancing;
 
 import upc.edu.cep.RDF_Model.Operators.*;
 import upc.edu.cep.RDF_Model.Rule;
@@ -9,23 +9,101 @@ import upc.edu.cep.RDF_Model.window.Window;
 import upc.edu.cep.RDF_Model.window.WindowType;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
- * Created by osboxes on 01/06/17.
+ * Created by osboxes on 04/07/17.
  */
-public class managerTest {
-    private static List<EventSchema> eventSchemas = new ArrayList<>();
-    private static List<Rule> rules = new ArrayList<>();
+public class testKmeans {
 
-    public static void main(String[] args) throws Exception {
+    public static List<EventSchema> eventSchemas = new ArrayList<>();
+    public static List<Rule> rules = new ArrayList<>();
 
-        //System.out.println(FlumeChannel.Interpret("AAA", "CCC"));
-        Manager manager = new Manager();
+    public static void main(String[] astrArgs) {
+        /**
+         * The code commented out here is just an example of how to use
+         * the provided functions and constructors.
+         *
+         */
+
+        List<EventSchema> eventSchemas;
+        List<Rule> rules;
+
+        schemas = generateEvents(10);
+        rules = generateRules(schemas,20);
+
+
+        List<Server> servers= new ArrayList<>();
+        Server server1 = new Server();
+        server1.setName("s1");
+        Server server2 = new Server();
+        server2.setName("s2");
+        Server server3 = new Server();
+        server3.setName("s3");
+        servers.add(server1);
+        servers.add(server2);
+        servers.add(server3);
+
         createRule();
-        System.out.println(manager.CreateConfiguration("agent", eventSchemas, rules, "server1:9092,server2:9092,server3:9092", "json", false, "rule2"));
+        KMeans KM = new KMeans(schemas, rules, servers);
+        KM.clustering(10); // 2 clusters, maximum 10 iterations
+        KM.printResults();
 
 
+//        ArrayList<String> adasd = new ArrayList<>(5);
+//        adasd.add(0,"sdf");
+//        adasd.add(4,"sdf");
+
+    }
+
+
+    private static Map<String,Stream> schemas;
+
+    private static Map<String,Stream>  generateEvents(int number) {
+        Map<String,Stream> schemas = new HashMap<>();
+        for (int i = 0; i < number; i++)
+        {
+
+            EventSchema schema = new EventSchema();
+            schema.setIRI("e" +i );
+            schema.setEventName("e" +i);
+
+            Stream stream = new Stream(schema,0);
+            stream.setOrder(i);
+            schemas.put(schema.getIRI(),stream);
+        }
+        return schemas;
+    }
+
+    private static List<Rule> generateRules(Map<String,Stream> schemas, int number)
+    {
+        List<Rule> rules = new ArrayList<>();
+
+        for (int i = 0; i < number; i++)
+        {
+
+            Sequence sequence = new Sequence();
+            TemporalPattern sequenceEvent = new TemporalPattern();
+            sequenceEvent.setTemporalOperator(sequence);
+            for (Stream eventSchema : schemas.values())
+            {
+                if(Math.random()>0.6)
+                {
+                    Event event = new Event();
+                    event.setEventSchema(eventSchema.getSchema());
+                    event.setIRI(eventSchema.getSchema().getIRI()+"e");
+                    sequenceEvent.addEvents(event);
+                }
+            }
+
+            Rule rule = new Rule();
+            rule.setIRI("r" +i );
+            rule.setCEPElement(sequenceEvent);
+            rules.add(rule);
+        }
+        return rules;
     }
 
     private static void createRule() {
@@ -176,6 +254,14 @@ public class managerTest {
         rule.setAction(action);
         rule.setCondition(allCondition);
 
+        Rule rule1 = new Rule();
+        rule1.setIRI("rule2");
+        rule1.setCEPElement(serviceOrder);
+        rule1.setWindow(window);
+        rule1.setAction(action);
+        rule1.setCondition(allCondition);
+
         rules.add(rule);
+        rules.add(rule1);
     }
 }

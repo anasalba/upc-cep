@@ -15,7 +15,7 @@ public class Manager {
 
     private Map<FlumeSource, List<FlumeSink>> sourceSinksMap = new HashMap<>();
 
-    public String CreateConfiguration(String agentName, List<EventSchema> events, List<Rule> rules, String zookeeperConnect, String streamType, boolean restart, String deletedRules) throws Exception {
+    public String CreateConfiguration(String agentName, List<EventSchema> events, List<Rule> rules, String kafkaBootstrap, String streamType, boolean restart, String deletedRules) throws Exception {
 //        BASE64Encoder encoder = new BASE64Encoder();
 //        MessageDigest md = MessageDigest.getInstance("MD5");
 //        md.update(someString.getBytes());
@@ -46,7 +46,7 @@ public class Manager {
             FlumeSource flumeSource = new FlumeSource();
             flumeSource.setEvent(event);
             flumeSource.setStreamType(streamType);
-            flumeSource.setZookeeperConnect(zookeeperConnect);
+            flumeSource.setKafkaBootstrap(kafkaBootstrap);
             flumeSource.setSourceName("Source" + event.getIRI());
             flumeSource.setAgentName(agentName);
             flumeSources.add(flumeSource);

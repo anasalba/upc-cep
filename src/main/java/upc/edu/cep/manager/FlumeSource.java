@@ -16,7 +16,7 @@ public class FlumeSource {
 
     EventSchema event;
     //    EventSchema atomicEvent;
-    private String zookeeperConnect;
+    private String kafkaBootstrap;
     private String streamType;
     private String agentName;
     private String sourceName;
@@ -24,12 +24,12 @@ public class FlumeSource {
     public FlumeSource() {
     }
 
-    public String getZookeeperConnect() {
-        return zookeeperConnect;
+    public String getKafkaBootstrap() {
+        return kafkaBootstrap;
     }
 
-    public void setZookeeperConnect(String zookeeperConnect) {
-        this.zookeeperConnect = zookeeperConnect;
+    public void setKafkaBootstrap(String kafkaBootstrap) {
+        this.kafkaBootstrap = kafkaBootstrap;
     }
 
     public String getStreamType() {
@@ -74,7 +74,7 @@ public class FlumeSource {
         eventAtts = eventAtts.trim();
         String result = String.join("\n"
                 , prefix + ManagerConstants.TYPE + " = upc.edu.cep.flume.sources.CEPKafkaSource"
-                , prefix + ManagerConstants.SOURCE_EVENT_TYPE + " = json"
+                , prefix + ManagerConstants.SOURCE_EVENT_TYPE + " = " + ManagerConstants.SOURCE_EVENT_TYPE_JSON
                 , prefix + ManagerConstants.SOURCE_EVENT_NAME + " = " + event.getEventName()
                 , prefix + ManagerConstants.SOURCE_ATTRIBUTES + " = " + eventAtts
         );
@@ -83,16 +83,16 @@ public class FlumeSource {
                     , prefix + attribute.getName() + ManagerConstants.DOT + ManagerConstants.TYPE + " = " + attribute.getAttributeType().toString());
         }
         result = String.join("\n", result
-                , prefix + ManagerConstants.SOURCE_ZOOKEEPER_CONNECT + " = " + zookeeperConnect
+                , prefix + ManagerConstants.SOURCE_KAFKA_BOOTSTRAP + " = " + kafkaBootstrap
                 , prefix + ManagerConstants.SOURCE_TOPIC + " = " + event.getTopicName()
                 , prefix + ManagerConstants.SOURCE_BATCH_SIZE + " = 100"
-                , prefix + ManagerConstants.INTERCEPTORS + " = " + "TimestampInterceptor HostInterceptor EventNameInterceptor"
-                , prefix + ManagerConstants.EVENTNAME_INTERCEPTOR_EVENTNAME + " = " + event.getEventName()
-                , prefix + ManagerConstants.EVENTNAME_INTERCEPTOR_TYPE + " = " + ManagerConstants.EVENTNAME_INTERCEPTOR_TYPE_INSTANCE
+                , prefix + ManagerConstants.INTERCEPTORS + " = " + "TimestampInterceptor HostInterceptor DistributedInterceptor CounterInterceptor"
                 , prefix + ManagerConstants.TIMESTAMP_INTERCEPTOR_TYPE + " = " + ManagerConstants.TIMESTAMP_INTERCEPTOR_TYPE_INSTANCE
                 , prefix + ManagerConstants.HOST_INTERCEPTOR_TYPE + " = " + ManagerConstants.HOST_INTERCEPTOR_TYPE_INSTANCE
                 , prefix + ManagerConstants.HOST_INTERCEPTOR_PRESERVEEXISTING + " = " + ManagerConstants.HOST_INTERCEPTOR_PRESERVEEXISTING_INSTANCE
                 , prefix + ManagerConstants.HOST_INTERCEPTOR_HOSTHEADER + " = " + ManagerConstants.HOST_INTERCEPTOR_HOSTHEADER_INSTANCE
+                , prefix + ManagerConstants.Distributed_INTERCEPTOR_EVENTNAME + " = " + event.getEventName()
+                , prefix + ManagerConstants.Distributed_INTERCEPTOR_TYPE + " = " + ManagerConstants.Distributed_INTERCEPTOR_TYPE_INSTANCE
         );
 
         List<FlumeSink> flumeSinks = sourceSinksMap.get(this);
@@ -127,8 +127,8 @@ public class FlumeSource {
                                 }
                                 filter = true;
                                 result = String.join("\n", result
-                                        , prefix + ManagerConstants.SELECTOR_PREFIX + flumeSink.getFlumeChannel().getChannelName() + " = " + a.getName()
-                                        , prefix + ManagerConstants.SELECTOR_PREFIX + flumeSink.getFlumeChannel().getChannelName() + ManagerConstants.DOT + a.getName() + ManagerConstants.DOT + sc.getOperator().toString() + " = " + lo.getValue()
+                                        , prefix + ManagerConstants.Distributed_INTERCEPTOR_PREFIX + flumeSink.getRule().getIRI() + " = " + a.getName()
+                                        , prefix + ManagerConstants.Distributed_INTERCEPTOR_PREFIX + flumeSink.getRule().getIRI() + ManagerConstants.DOT + a.getName() + ManagerConstants.DOT + sc.getOperator().toString() + " = " + lo.getValue()
                                 );
                             }
                         }

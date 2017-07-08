@@ -202,21 +202,19 @@ public class DistributedInterceptor implements Interceptor {
                     List<String> attributesList = new ArrayList<String>();
                     rulesMap.put(rule, new ArrayList<>());
                     //System.out.println("______________________________________________________________________ "+rule);
-                    Collections.addAll(attributesList, context.getString(rule).split(";"));
-                    for (String attributeName : attributesList) {
-                        Attribute attribute = new Attribute();
-                        attribute.setAttName(attributeName);
-                        attribute.setOperations(context.getSubProperties(rule + "." + attributeName + "."));
-                        attribute.setType(attributes.get(attributeName));
-                        rulesMap.get(rule).add(attribute);
-
-
+                    String atts = context.getString(rule);
+                    if (atts!=null && atts!="") {
+                        Collections.addAll(attributesList, atts.split(";"));
+                        for (String attributeName : attributesList) {
+                            Attribute attribute = new Attribute();
+                            attribute.setAttName(attributeName);
+                            attribute.setOperations(context.getSubProperties(rule + "." + attributeName + "."));
+                            attribute.setType(attributes.get(attributeName));
+                            rulesMap.get(rule).add(attribute);
+                        }
                     }
                 }
             }
-
-            // TODO Auto-generated method stub
-
         }
 
         @Override

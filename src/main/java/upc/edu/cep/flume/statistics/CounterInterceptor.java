@@ -110,15 +110,15 @@ public class CounterInterceptor extends RollingCountInterceptor<String> {
     public List<Event> getStatsEvents() {
         List<Event> events = Lists.newArrayList();
         Map<String, Long> counters = getCounters();
-
+        Map<String, String> headers = Maps.newHashMap();
         for (String obj : counters.keySet()) {
-            Map<String, String> headers = Maps.newHashMap();
             headers.put(obj, String.valueOf(counters.get(obj)));
+        }
+        if (counters.keySet().size()>0) {
             headers.put(TimestampInterceptor.Constants.TIMESTAMP,
                     Long.toString(System.currentTimeMillis()));
             events.add(EventBuilder.withBody(new byte[0], headers));
         }
-
         return events;
     }
 

@@ -12,15 +12,15 @@ public class mongoExample1 {
 
             /**** Connect to MongoDB ****/
             // Since 2.10.0, uses MongoClient
-            MongoClient mongo = new MongoClient("localhost", 27017);
+            MongoClient mongo = new MongoClient("server1", 27017);
 
             /**** Get database ****/
             // if database doesn't exists, MongoDB will create it for you
-            DB db = mongo.getDB("testdb");
+            DB db = mongo.getDB("statistics");
 
             /**** Get collection / table from 'testdb' ****/
             // if collection doesn't exists, MongoDB will create it for you
-            DBCollection table = db.getCollection("user");
+            DBCollection table = db.getCollection("cep");
 
             /**** Insert ****/
             // create a document to store key and value
