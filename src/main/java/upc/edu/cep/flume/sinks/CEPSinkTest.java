@@ -230,12 +230,12 @@ public class CEPSinkTest extends AbstractSink implements Configurable {
                 GenericRecord payload2 = null;
                 payload2 = reader.read(null, decoder);
 
-                if (payload2.get("mylog").toString().equals("final")) {
-                    try {
-                        Files.write(Paths.get("/home/osboxes/upc-cep/cep2.txt"), ("Just Arrived: " + System.currentTimeMillis()+"  , ").getBytes(), StandardOpenOption.APPEND);
-                    } catch (IOException e) {
-                    }
-                }
+//                if (payload2.get("mylog").toString().equals("final")) {
+//                    try {
+//                        Files.write(Paths.get("/home/osboxes/upc-cep/testdone.txt"), (System.currentTimeMillis()+"\n").getBytes(), StandardOpenOption.APPEND);
+//                    } catch (IOException e) {
+//                    }
+//                }
 
                 epService.getEPRuntime().sendEventAvro(payload2, eventName);
 
@@ -284,7 +284,7 @@ public class CEPSinkTest extends AbstractSink implements Configurable {
 
                 if (event.get(action[0]).toString().equals("final")) {
                     try {
-                        Files.write(Paths.get("/home/osboxes/upc-cep/cep2.txt"), ("Finished Processing: " + System.currentTimeMillis()).getBytes(), StandardOpenOption.APPEND);
+                        Files.write(Paths.get("/home/osboxes/upc-cep/testdone.txt"), (System.currentTimeMillis()+"\n").getBytes(), StandardOpenOption.APPEND);
                     } catch (IOException e) {
                     }
                 }
