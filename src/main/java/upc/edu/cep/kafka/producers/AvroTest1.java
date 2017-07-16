@@ -47,7 +47,7 @@ public class AvroTest1 {
         fields.add(new Schema.Field("mylog", Schema.create(Schema.Type.STRING), null, null));
         fields.add(new Schema.Field("yourlog", Schema.create(Schema.Type.STRING), null, null));
 
-        Schema schema = Schema.createRecord("Event1", null, "", false);
+        Schema schema = Schema.createRecord("EventA", null, "", false);
         schema.setFields(fields);
 
         return (schema);

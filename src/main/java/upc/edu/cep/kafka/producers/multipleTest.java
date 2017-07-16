@@ -21,14 +21,18 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
-import java.util.Properties;
-import java.util.Random;
+import java.time.LocalDateTime;
+import java.util.*;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 
 //  /home/osboxes/apache-flume-1.7.0-bin/bin/flume-ng agent -name remote_agent -c /home/osboxes/apache-flume-1.7.0-bin/conf -f /home/osboxes/apache-flume-1.7.0-bin/conf/5-4-2017-jsoneventtest.properties
 
 
-public class ProducerTest {
+public class multipleTest {
     //hi
     public static void main(String[] args) throws Exception {
         KafkaProducer<String, String> producer;
@@ -49,30 +53,69 @@ public class ProducerTest {
         }
 
         Random rand = new Random(System.currentTimeMillis());
+        Random r = new Random(System.currentTimeMillis());
 
+        EventA eventA = new EventA();
+        EventB eventB = new EventB();
+        EventC eventC = new EventC();
+        EventD eventD = new EventD();
+        EventE eventE = new EventE();
+        ProducerRecord record;
 
-        for (int iii = 0 ; iii<1;iii++) {
+        for (int itr = 0; itr < 1; itr++) {
             try {
-                Files.write(Paths.get("/home/osboxes/upc-cep/testsend.txt"), (System.currentTimeMillis()+"\n").getBytes(), StandardOpenOption.APPEND);
+                Files.write(Paths.get("/home/osboxes/upc-cep/testsend.txt"), (System.currentTimeMillis() + "\n").getBytes(), StandardOpenOption.APPEND);
             } catch (IOException e) {
             }
             Long i = 0l;
             long limit = 1000000;
-            long limitless = limit-1000;
+            long limitless = limit - 1000;
             while (limit > i++) {
 
-
-                EventA eventA = new EventA();
-                eventA.setA("v1345");
-                eventA.setB("v2");
-                eventA.setC(rand.nextInt(6));
-                if (i == limitless) {
-                    eventA.setA("final");
-                    eventA.setC(1);
+                int c = rand.nextInt(100);
+                if (c < 50) {
+                    eventD.setA("a");
+                    eventD.setB(r.nextLong()%20);
+                    if (i == limitless) {
+                        eventD.setA("final");
+                        eventD.setB(5);
+                    }
+                    record = new ProducerRecord<String, byte[]>("dstream", i.toString(), objectMapper.writeValueAsBytes(eventD));
+                } else if (c < 65) {
+                    eventA.setA("a");
+                    eventA.setB("b");
+                    eventA.setC(r.nextInt(6));
+                    if (i == limitless) {
+                        eventA.setA("final");
+                        eventA.setC(1);
+                    }
+                    record = new ProducerRecord<String, byte[]>("astream", i.toString(), objectMapper.writeValueAsBytes(eventA));
+                } else if (c < 80) {
+                    eventB.setA("a");
+                    eventB.setB("b");
+                    eventB.setC(r.nextDouble()*15);
+                    if (i == limitless) {
+                        eventB.setA("final");
+                        eventB.setC(1);
+                    }
+                    record = new ProducerRecord<String, byte[]>("bstream", i.toString(), objectMapper.writeValueAsBytes(eventB));
+                } else if (c < 95) {
+                    eventC.setA("a");
+                    eventC.setB(r.nextInt(8));
+                    if (i == limitless) {
+                        eventC.setA("final");
+                        eventC.setB(1);
+                    }
+                    record = new ProducerRecord<String, byte[]>("cstream", i.toString(), objectMapper.writeValueAsBytes(eventC));
+                } else {
+                    eventE.setA("a");
+                    eventE.setB(r.nextInt(12));
+                    if (i == limitless) {
+                        eventE.setA("final");
+                        eventE.setB(1);
+                    }
+                    record = new ProducerRecord<String, byte[]>("estream", i.toString(), objectMapper.writeValueAsBytes(eventE));
                 }
-
-
-                ProducerRecord record = new ProducerRecord<String, byte[]>("dis", i.toString(), objectMapper.writeValueAsBytes(eventA));
 
 
                 try {
@@ -90,13 +133,15 @@ public class ProducerTest {
                 Files.write(Paths.get("/home/osboxes/upc-cep/testfinishsend.txt"), (System.currentTimeMillis() + "\n").getBytes(), StandardOpenOption.APPEND);
             } catch (IOException e) {
             }
+
+
         }
         //producer.close();
     }
 
-    public static void busyWaitNanos(long nanos){
+    public static void busyWaitNanos(long nanos) {
         long waitUntil = System.nanoTime() + (nanos);
-        while(waitUntil > System.nanoTime()){
+        while (waitUntil > System.nanoTime()) {
             ;
         }
     }
@@ -114,4 +159,5 @@ public class ProducerTest {
             os.close();
         }
     }
+
 }

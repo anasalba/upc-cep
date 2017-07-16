@@ -126,6 +126,6 @@ public class FlumeSink {
     }
 }
 
-//        remote_agent.sinks.CEPSinkOldVersion.Event1.attributes = mylog yourlog
-//        remote_agent.sinks.CEPSinkOldVersion.Event1.mylog.type=string
-//        remote_agent.sinks.CEPSinkOldVersion.Event1.yourlog.type=string
+//        remote_agent.sinks.CEPSinkOldVersion.EventA.attributes = mylog yourlog
+//        remote_agent.sinks.CEPSinkOldVersion.EventA.mylog.type=string
+//        remote_agent.sinks.CEPSinkOldVersion.EventA.yourlog.type=string

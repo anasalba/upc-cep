@@ -49,13 +49,13 @@ public class JSONProducer {
             avroRecord.put("yourlog", "value2");
             //  byte[] bytes = recordInjection.apply(avroRecord);
 
-            Event1 event1 = new Event1();
-            event1.setMylog("v1");
-            event1.setYourlog("v2");
+            EventA eventA = new EventA();
+            eventA.setA("v1");
+            eventA.setB("v2");
 
             //  ProducerRecord<String, byte[]> record = new ProducerRecord<>("mytopic", bytes);
             //ProducerRecord record = new ProducerRecord<String, byte[]>("logcep", key, datumToByteArray(schema, avroRecord));
-            ProducerRecord record = new ProducerRecord<String, byte[]>("logcep", key, objectMapper.writeValueAsBytes(event1));
+            ProducerRecord record = new ProducerRecord<String, byte[]>("logcep", key, objectMapper.writeValueAsBytes(eventA));
 
 
             try {

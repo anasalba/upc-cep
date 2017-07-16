@@ -230,14 +230,15 @@ public class CEPSinkTest extends AbstractSink implements Configurable {
                 GenericRecord payload2 = null;
                 payload2 = reader.read(null, decoder);
 
-//                if (payload2.get("mylog").toString().equals("final")) {
-//                    try {
-//                        Files.write(Paths.get("/home/osboxes/upc-cep/testdone.txt"), (System.currentTimeMillis()+"\n").getBytes(), StandardOpenOption.APPEND);
-//                    } catch (IOException e) {
-//                    }
-//                }
-
                 epService.getEPRuntime().sendEventAvro(payload2, eventName);
+
+                if (payload2.get("a").toString().equals("final")) {
+                    try {
+                        Files.write(Paths.get("/home/osboxes/upc-cep/testdone.txt"), (System.currentTimeMillis()+"\n").getBytes(), StandardOpenOption.APPEND);
+                    } catch (IOException e) {
+                    }
+                }
+
 
                 LogEvent cepEvent = new LogEvent();
                 cepEvent.setLog("w");
@@ -281,13 +282,13 @@ public class CEPSinkTest extends AbstractSink implements Configurable {
                     return;
                 }
                 EventBean event = newEvents[0];
-
-                if (event.get(action[0]).toString().equals("final")) {
-                    try {
-                        Files.write(Paths.get("/home/osboxes/upc-cep/testdone.txt"), (System.currentTimeMillis()+"\n").getBytes(), StandardOpenOption.APPEND);
-                    } catch (IOException e) {
-                    }
-                }
+//
+//                if (event.get(action[0]).toString().equals("final")) {
+//                    try {
+//                        Files.write(Paths.get("/home/osboxes/upc-cep/testdone.txt"), (System.currentTimeMillis()+"\n").getBytes(), StandardOpenOption.APPEND);
+//                    } catch (IOException e) {
+//                    }
+//                }
                 //logger.info();
             } catch (Exception e) {
                 e.printStackTrace();

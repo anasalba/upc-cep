@@ -38,12 +38,12 @@ public class JSONProducerEvent1 {
         int i = 0;
         while (true) {
 
-            Event1 event1 = new Event1();
-            event1.setMylog("v1345");
-            event1.setYourlog("v2");
-            event1.setFifi(4);
+            EventA eventA = new EventA();
+            eventA.setA("v1345");
+            eventA.setB("v2");
+            eventA.setC(4);
 
-            ProducerRecord record = new ProducerRecord<String, byte[]>("logcep2", key, objectMapper.writeValueAsBytes(event1));
+            ProducerRecord record = new ProducerRecord<String, byte[]>("logcep2", key, objectMapper.writeValueAsBytes(eventA));
 
 
             try {

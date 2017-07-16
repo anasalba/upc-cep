@@ -147,13 +147,13 @@ public class InterpreterTest {
     }
 
     public static void test1() throws InterpreterException {
-        //select count(Event1.A) from pattern [every Event1 where timer:within(2 sec)].win:time(2 hour)
+        //select count(EventA.A) from pattern [every EventA where timer:within(2 sec)].win:time(2 hour)
 
         Attribute a = new Attribute();
         a.setName("A");
 
         EventSchema event1 = new EventSchema();
-        event1.setEventName("Event1");
+        event1.setEventName("EventA");
         event1.addAttribute(a);
 
         a.setEvent(event1);

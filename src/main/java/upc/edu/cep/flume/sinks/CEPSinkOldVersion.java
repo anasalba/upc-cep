@@ -84,7 +84,7 @@ public class CEPSinkOldVersion extends AbstractSink implements Configurable {
 //        epService = EPServiceProviderManager.getDefaultProvider(config);
 
         //Creating a Statement
-        //String expression = "select count(a) from pattern [every a=Event1 where timer:within(2 sec)].win:time(2 hour)"; //time_batch
+        //String expression = "select count(a) from pattern [every a=EventA where timer:within(2 sec)].win:time(2 hour)"; //time_batch
 
         if (restart) {
             if (epService.getEPAdministrator().getStatement(ruleID) == null) {
@@ -117,12 +117,12 @@ public class CEPSinkOldVersion extends AbstractSink implements Configurable {
         }
 
 //or test
-        //EPStatement statement = epService.getEPAdministrator().createPattern("every (spike= Event1 or error= Event2)");
-//        String expression = "select * from pattern [every (spike= Event1 or error= Event2)]"; //time_batch
+        //EPStatement statement = epService.getEPAdministrator().createPattern("every (spike= EventA or error= Event2)");
+//        String expression = "select * from pattern [every (spike= EventA or error= Event2)]"; //time_batch
 //        EPStatement statement = epService.getEPAdministrator().createEPL(expression);
 
 //and test
-        //String expression = "select * from pattern [every (spike= Event1 and error= Event2 where timer:within(10 sec))]"; //time_batch
+        //String expression = "select * from pattern [every (spike= EventA and error= Event2 where timer:within(10 sec))]"; //time_batch
         //EPStatement statement = epService.getEPAdministrator().createEPL(expression);
 
         // Adding a Listener
