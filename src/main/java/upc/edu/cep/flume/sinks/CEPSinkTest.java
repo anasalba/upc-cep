@@ -234,7 +234,18 @@ public class CEPSinkTest extends AbstractSink implements Configurable {
 
                 if (payload2.get("a").toString().equals("final")) {
                     try {
-                        Files.write(Paths.get("/home/osboxes/upc-cep/testdone.txt"), (System.currentTimeMillis()+"\n").getBytes(), StandardOpenOption.APPEND);
+                        long currentTime =  System.currentTimeMillis();
+                        long currentNOevents = epService.getEPRuntime().getNumEventsEvaluated();
+                        Files.write(Paths.get("/home/osboxes/upc-cep/testdone.txt"), (currentTime+"\n").getBytes(), StandardOpenOption.APPEND);
+//                        Files.write(Paths.get("/home/osboxes/upc-cep/testdone.txt"), ("now: "+ currentNOevents+ " , "+ currentTime+"\n").getBytes(), StandardOpenOption.APPEND);
+//                        Thread.sleep(500);
+//                        while(epService.getEPRuntime().getNumEventsEvaluated()!= currentNOevents)
+//                        {
+//                            currentTime =  System.currentTimeMillis();
+//                            currentNOevents = epService.getEPRuntime().getNumEventsEvaluated();
+//                            Thread.sleep(500);
+//                        }
+//                        Files.write(Paths.get("/home/osboxes/upc-cep/testdone.txt"), (currentNOevents+ " , "+ currentTime+"\n").getBytes(), StandardOpenOption.APPEND);
                     } catch (IOException e) {
                     }
                 }
