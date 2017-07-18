@@ -39,7 +39,8 @@ public class DCEPFilterSelector extends AbstractChannelSelector {
         for (String r : rules) {
             r = r.trim();
             if (!r.equals("")) {
-                channelsSet.add(channels.get(r));
+                if (channels.get(r)!=null)
+                    channelsSet.add(channels.get(r));
                 //System.out.println("+++++++++++++++++++++++++++++++++++  " + channels.get(r));
             }
         }
